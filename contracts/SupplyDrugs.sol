@@ -80,31 +80,36 @@ contract SupplyDrugs is Ownable {
 
     function getCurrentPrescriptionByPatient() public view returns(string memory) {
         string memory s="";
-        for(uint i = prescriptions.length-1;i>=0;i--)
+        if(prescriptions.length>0)
         {
-            if(prescriptions[i].patient==msg.sender){
-                s= s.toSlice().concat("\n\n<h3>Prescription Id: ".toSlice());
-                s= s.toSlice().concat(uintToString(i).toSlice());
-                s= s.toSlice().concat("\n</h3>".toSlice());
-                s= s.toSlice().concat("\n<p>Address: ".toSlice());
-                s= s.toSlice().concat(toAsciiString(prescriptions[i].patient).toSlice());
-                s= s.toSlice().concat("\n</p>".toSlice());
-                for(uint j=0;j<drugs.length;j++){
-                    if(drugs[j].idOfPres==i){
-                        string memory temp =uintToString(drugs[j].limit);
-                        s= s.toSlice().concat("\n<p>".toSlice());
-                        s= s.toSlice().concat(drugs[j].name.toSlice());
-                        s= s.toSlice().concat("_".toSlice());
-                        s= s.toSlice().concat(temp.toSlice());
-                        s= s.toSlice().concat("</p>".toSlice());
+            for(uint i = prescriptions.length-1;i>=0;i--)
+            {
+                if(prescriptions[i].patient==msg.sender){
+                    s= s.toSlice().concat("\n\n<h3>Prescription Id: ".toSlice());
+                    s= s.toSlice().concat(uintToString(i).toSlice());
+                    s= s.toSlice().concat("\n</h3>".toSlice());
+                    s= s.toSlice().concat("\n<p>Address: ".toSlice());
+                    s= s.toSlice().concat(toAsciiString(prescriptions[i].patient).toSlice());
+                    s= s.toSlice().concat("\n</p>".toSlice());
+                    for(uint j=0;j<drugs.length;j++){
+                        if(drugs[j].idOfPres==i){
+                            string memory temp =uintToString(drugs[j].limit);
+                            s= s.toSlice().concat("\n<p>".toSlice());
+                            s= s.toSlice().concat(drugs[j].name.toSlice());
+                            s= s.toSlice().concat("_".toSlice());
+                            s= s.toSlice().concat(temp.toSlice());
+                            s= s.toSlice().concat("</p>".toSlice());
+                        }
                     }
+                    s= s.toSlice().concat("<p>Price: ".toSlice());
+                    s= s.toSlice().concat(uintToString(prescriptions[i].price).toSlice());
+                    s= s.toSlice().concat("<p>".toSlice());
+                    break;
                 }
-                s= s.toSlice().concat("<p>Price: ".toSlice());
-                s= s.toSlice().concat(uintToString(prescriptions[i].price).toSlice());
-                s= s.toSlice().concat("<p>".toSlice());
-                break;
             }
         }
+        else
+            s = "Not found";
         return s;
     }
     function getPrescriptionByOwner() public view onlyOwner returns(string memory) {
